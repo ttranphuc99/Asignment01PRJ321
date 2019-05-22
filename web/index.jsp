@@ -9,9 +9,13 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <title>Home Page</title>
     </head>
     <body>
-        <h1>Hello World!</h1>
+        <h1>Hello User!</h1>
+        <%= (request.getAttribute("NOTI") != null ? request.getAttribute("NOTI") : "") %> <b/>
+        
+        <a href="insert.jsp">Insert New Food</a><br/>
+        <a href="search.jsp">Search Food</a>
     </body>
 </html>
