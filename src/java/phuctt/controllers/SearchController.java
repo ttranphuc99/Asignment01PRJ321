@@ -7,19 +7,21 @@ package phuctt.controllers;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import phuctt.daos.FoodDAO;
+import phuctt.dtos.FoodDTO;
 
 /**
  *
  * @author Thien Phuc
  */
-public class MainController extends HttpServlet {
-    private final String INSERT = "InsertController";
-    private final String SEARCH = "SearchController";
-    private final String ERROR = "error.jsp";
+public class SearchController extends HttpServlet {
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -33,18 +35,39 @@ public class MainController extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         String url = "error.jsp";
-        String action = request.getParameter("action");
+        float minimum = 0, maximum = 0;
+        boolean isValid = true;
+        try {
+            minimum = Float.parseFloat(request.getParameter("txtMinimum"));
+        } catch (NumberFormatException e) {
+            request.setAttribute("ERROR_MINIMUM", "Price must be a float");
+            isValid = false;
+        }
         
-        if (action != null) {
-            if (action.equals("Insert")) {
-                url = INSERT;
-            } else if (action.equals("Search")) {
-                url = SEARCH;
-            } else {
-                request.setAttribute("ERROR", "Action is not support");
-            }
+        try {
+            maximum = Float.parseFloat(request.getParameter("txtMaximum"));
+        } catch (NumberFormatException e) {
+            request.setAttribute("ERROR_MAXIMUM", "Price must be a float");
+            isValid = false;
+        }
+        
+        if (!isValid) {
+            url = "search.jsp";
         } else {
-            request.setAttribute("ERROR", "Action error!");
+            if (minimum > maximum) {
+                float t = maximum;
+                maximum = minimum;
+                minimum = t;
+            }
+            
+            FoodDAO dao = new FoodDAO();
+            try {
+                List<FoodDTO> result = dao.findByPriceInRange(minimum, maximum);
+                request.setAttribute("RESULT", result);
+                url = "search.jsp";
+            } catch (SQLException | ClassNotFoundException e) {
+                request.setAttribute("ERROR", "Error while connecting with database");
+            }
         }
         
         request.getRequestDispatcher(url).forward(request, response);

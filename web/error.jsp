@@ -13,6 +13,7 @@
     </head>
     <body>
         <h1>Error</h1>
-        <%= request.getAttribute("ERROR") %>        
+        <%= request.getAttribute("ERROR") %>
+        <a href="index.jsp">Back to Home</a>
     </body>
 </html>

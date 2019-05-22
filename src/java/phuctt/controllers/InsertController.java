@@ -6,7 +6,6 @@
 package phuctt.controllers;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.sql.SQLException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -34,34 +33,54 @@ public class InsertController extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         String url = "error.jsp";
-        
+
+        boolean isValid = true;
         //recieve parameter
         String foodID = request.getParameter("txtFoodID");
         String foodName = request.getParameter("txtFoodName");
-        float price = Float.parseFloat(request.getParameter("txtPrice"));
+        float price = 0;
+        try {
+            price = Float.parseFloat(request.getParameter("txtPrice"));
+        } catch (NumberFormatException e) {
+            request.setAttribute("ERROR_PRICE", "Price must be in float");
+            isValid = false;
+        }
         String description = request.getParameter("txtDescription");
         String type = request.getParameter("txtType");
         String status = request.getParameter("txtStatus");
-        
-        //call model
-        FoodDTO dto = new FoodDTO(foodID, foodName, description, type, status, price);
-        
-        FoodDAO dao = new FoodDAO();
-        boolean check;
-        
-        //render view
-        try {
-            check = dao.insert(dto);
-            if (check) {
-                url = "index.jsp";
-                request.setAttribute("NOTI", "Insert Food " +foodID+ " Succesfully");
-            } else {
-                request.setAttribute("ERROR", "Insert Food" +foodID+ "Failed");
-            }
-        } catch (ClassNotFoundException | SQLException e) {
-            request.setAttribute("ERROR", "Error while connect with database");
+        if (status == null) {
+            request.setAttribute("ERROR_STATUS", "Status cannot be empty");
+            isValid = false;
         }
-        
+
+        if (!isValid) {
+            url = "insert.jsp";
+        } else {
+            //call model
+            FoodDTO dto = new FoodDTO(foodID, foodName, description, type, status, price);
+
+            FoodDAO dao = new FoodDAO();
+            boolean check;
+
+            //render view
+            try {
+                check = dao.insert(dto);
+
+                if (check) {
+                    url = "index.jsp";
+                    request.setAttribute("NOTI", "Insert Food " + foodID + " Succesfully");
+                } else {
+                    request.setAttribute("ERROR", "Insert Food" + foodID + "Failed");
+                }
+            } catch (ClassNotFoundException | SQLException e) {
+                if (e.getMessage().contains("duplicate")) {
+                    url = "insert.jsp";
+                    request.setAttribute("ERROR", "ID is existed!");
+                } else {
+                    request.setAttribute("ERROR", "Error while connect with database");
+                }
+            }
+        }
         request.getRequestDispatcher(url).forward(request, response);
     }
 
