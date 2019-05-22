@@ -16,11 +16,11 @@
     <body>
         <form action="MainController" method="GET">
             Minimum Price:
-            <input type="text" name="txtMinimum" value="<%= (request.getParameter("txtMinimum") != null) ? request.getParameter("txtMinimum") : ""%>"/><br/>
+            <input type="text" name="txtMinimum" required="true" value="<%= (request.getParameter("txtMinimum") != null) ? request.getParameter("txtMinimum") : ""%>"/><br/>
             <font color="red"><%= (request.getAttribute("ERROR_MINIMUM") != null) ? request.getAttribute("ERROR_MINIMUM") : ""%></font><br/>
 
             Maximum Price:
-            <input type="text" name="txtMaximum" value="<%= (request.getParameter("txtMaximum") != null) ? request.getParameter("txtMaximum") : ""%>"/><br/>
+            <input type="text" name="txtMaximum" required="true" value="<%= (request.getParameter("txtMaximum") != null) ? request.getParameter("txtMaximum") : ""%>"/><br/>
             <font color="red"><%= (request.getAttribute("ERROR_MAXIMUM") != null) ? request.getAttribute("ERROR_MAXIMUM") : ""%></font><br/>
 
             <input type="submit" name="action" value="Search"/>
