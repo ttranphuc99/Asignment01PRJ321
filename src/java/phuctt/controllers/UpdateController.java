@@ -6,23 +6,23 @@
 package phuctt.controllers;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import phuctt.daos.FoodDAO;
+import phuctt.dtos.FoodDTO;
 
 /**
  *
  * @author Thien Phuc
  */
-public class MainController extends HttpServlet {
-    private final String INSERT = "InsertController";
-    private final String SEARCH = "SearchController";
-    private final String EDIT = "EditController";
-    private final String UPDATE = "UpdateController";
-    private final String DELETE = "DeleteController";
-    private final String ERROR = "error.jsp";
+public class UpdateController extends HttpServlet {
+
+    private static final String UPDATE = "edit.jsp";
+    private static final String SUCCESS = "SearchController";
+    private static final String ERROR = "error.jsp";
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -35,27 +35,45 @@ public class MainController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        String url = ERROR;
-        String action = request.getParameter("action");
-        System.out.println(action);
-        if (action != null) {
-            if (action.equals("Insert")) {
-                url = INSERT;
-            } else if (action.equals("Search")) {
-                url = SEARCH;
-            } else if (action.equals("Edit")) {
-                url = EDIT;
-            } else if (action.equals("Delete")) {
-                url = DELETE;
-            } else if (action.equals("Update")) {
-                url = UPDATE;
-            } else {
-                request.setAttribute("ERROR", "Action is not support");
-            }
-        } else {
-            request.setAttribute("ERROR", "Action error!");
+        String url = UPDATE;
+        boolean isValid = true;
+
+        String foodID = request.getParameter("txtFoodID");
+        String foodName = request.getParameter("txtFoodName");
+        float price = 0;
+        try {
+            price = Float.parseFloat(request.getParameter("txtPrice"));
+        } catch (NumberFormatException e) {
+            request.setAttribute("ERROR_PRICE", "Price must be in float");
+            isValid = false;
         }
-        
+        String description = request.getParameter("txtDescription");
+        String type = request.getParameter("txtType");
+        String status = request.getParameter("txtStatus");
+        if (status == null) {
+            request.setAttribute("ERROR_STATUS", "Status cannot be empty");
+            isValid = false;
+        }
+
+        if (!isValid) {
+            url = UPDATE;
+        } else {
+            FoodDTO dto = new FoodDTO(foodID, foodName, description, type, status, price);
+            try {
+                FoodDAO dao = new FoodDAO();
+                boolean check = dao.update(dto);
+                
+                if (check) {
+                    request.setAttribute("NOTI", "Update Food ID: " + foodID + " Successfully!");
+                    url = SUCCESS;
+                } else {
+                    url = ERROR;
+                    request.setAttribute("ERROR", "Update Food ID: " + foodID + " Failed!");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         request.getRequestDispatcher(url).forward(request, response);
     }
 

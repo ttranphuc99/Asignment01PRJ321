@@ -6,23 +6,18 @@
 package phuctt.controllers;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import phuctt.daos.FoodDAO;
 
 /**
  *
  * @author Thien Phuc
  */
-public class MainController extends HttpServlet {
-    private final String INSERT = "InsertController";
-    private final String SEARCH = "SearchController";
-    private final String EDIT = "EditController";
-    private final String UPDATE = "UpdateController";
-    private final String DELETE = "DeleteController";
-    private final String ERROR = "error.jsp";
+public class DeleteController extends HttpServlet {
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -35,28 +30,21 @@ public class MainController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        String url = ERROR;
-        String action = request.getParameter("action");
-        System.out.println(action);
-        if (action != null) {
-            if (action.equals("Insert")) {
-                url = INSERT;
-            } else if (action.equals("Search")) {
-                url = SEARCH;
-            } else if (action.equals("Edit")) {
-                url = EDIT;
-            } else if (action.equals("Delete")) {
-                url = DELETE;
-            } else if (action.equals("Update")) {
-                url = UPDATE;
-            } else {
-                request.setAttribute("ERROR", "Action is not support");
+        String foodID = request.getParameter("txtFoodID");
+        
+        request.setAttribute("txt", this);
+        try {
+            FoodDAO dao = new FoodDAO();
+            boolean check = dao.delete(foodID);
+            
+            if (check) {
+                request.setAttribute("NOTI", "Delete food id: " + foodID + " successfully!");
             }
-        } else {
-            request.setAttribute("ERROR", "Action error!");
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         
-        request.getRequestDispatcher(url).forward(request, response);
+        request.getRequestDispatcher("SearchController").forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

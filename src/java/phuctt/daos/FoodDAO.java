@@ -96,4 +96,76 @@ public class FoodDAO implements Serializable {
         }
         return result;
     }
+    
+    public FoodDTO findByID(String id) throws SQLException, ClassNotFoundException {
+        FoodDTO dto = null;
+        try {
+            conn = DBConnection.getConnection();
+            
+            if (conn != null) {
+                String sql = "SELECT FoodID, FoodName, Price, Description, Type, Status FROM tbl_Food WHERE FoodID = ?";
+                
+                preStm = conn.prepareStatement(sql);
+                preStm.setString(1, id);
+                rs = preStm.executeQuery();
+                
+                if (rs.next()) {
+                    String foodID = rs.getString("FoodID");
+                    String foodName = rs.getString("FoodName");
+                    float price = Float.parseFloat(rs.getString("Price"));
+                    String description = rs.getString("Description");
+                    String type = rs.getString("Type");
+                    String status = rs.getString("Status");
+                    
+                    dto = new FoodDTO(foodID, foodName, description, type, status, price);
+                }
+            }
+        } finally {
+            closeConnection();
+        }
+        return dto;
+    }
+    
+    public boolean update(FoodDTO dto) throws SQLException, ClassNotFoundException {
+        boolean check = false;
+        try {
+            conn = DBConnection.getConnection();
+            
+            if (conn != null) {
+                String sql = "UPDATE tbl_Food SET FoodName = ?, Price = ?, Description = ?, Type = ?, Status = ? WHERE FoodID = ?";
+                
+                preStm = conn.prepareStatement(sql);
+                preStm.setString(1, dto.getFoodName());
+                preStm.setFloat(2, dto.getPrice());
+                preStm.setString(3, dto.getDescription());
+                preStm.setString(4, dto.getType());
+                preStm.setString(5, dto.getStatus());
+                preStm.setString(6, dto.getFoodID());
+                
+                check = preStm.executeUpdate() > 0;
+            }
+        } finally {
+            closeConnection();
+        }
+        return check;
+    }
+    
+    public boolean delete(String id) throws SQLException, ClassNotFoundException {
+        boolean check = false;
+        try {
+            conn = DBConnection.getConnection();
+            
+            if (conn != null) {
+                String sql = "DELETE FROM tbl_Food WHERE FoodID = ?";
+                
+                preStm = conn.prepareStatement(sql);
+                preStm.setString(1, id);
+                
+                check = preStm.executeUpdate() > 0;
+            }
+        } finally {
+            closeConnection();
+        }
+        return check;
+    }
 }

@@ -6,23 +6,22 @@
 package phuctt.controllers;
 
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.sql.SQLException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import phuctt.daos.FoodDAO;
+import phuctt.dtos.FoodDTO;
 
 /**
  *
  * @author Thien Phuc
  */
-public class MainController extends HttpServlet {
-    private final String INSERT = "InsertController";
-    private final String SEARCH = "SearchController";
-    private final String EDIT = "EditController";
-    private final String UPDATE = "UpdateController";
-    private final String DELETE = "DeleteController";
-    private final String ERROR = "error.jsp";
+public class EditController extends HttpServlet {
+    private static final String ERROR = "error.jsp";
+    private static final String EDIT = "edit.jsp";
+    
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -36,26 +35,20 @@ public class MainController extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         String url = ERROR;
-        String action = request.getParameter("action");
-        System.out.println(action);
-        if (action != null) {
-            if (action.equals("Insert")) {
-                url = INSERT;
-            } else if (action.equals("Search")) {
-                url = SEARCH;
-            } else if (action.equals("Edit")) {
-                url = EDIT;
-            } else if (action.equals("Delete")) {
-                url = DELETE;
-            } else if (action.equals("Update")) {
-                url = UPDATE;
-            } else {
-                request.setAttribute("ERROR", "Action is not support");
-            }
-        } else {
-            request.setAttribute("ERROR", "Action error!");
-        }
+        String id = request.getParameter("txtFoodID");
         
+        FoodDAO dao = new FoodDAO();
+        try {
+            FoodDTO dto = dao.findByID(id);
+            if (dto != null) {
+                request.setAttribute("DTO", dto);
+                url = EDIT;
+            } else {
+                request.setAttribute("ERROR", "Not found ID");
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
         request.getRequestDispatcher(url).forward(request, response);
     }
 

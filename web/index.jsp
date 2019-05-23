@@ -13,7 +13,7 @@
     </head>
     <body>
         <h1>Hello User!</h1>
-        <%= (request.getAttribute("NOTI") != null ? request.getAttribute("NOTI") : "") %> <b/>
+        <%= (request.getAttribute("NOTI") != null ? request.getAttribute("NOTI") : "") %> <br/>
         
         <a href="insert.jsp">Insert New Food</a><br/>
         <a href="search.jsp">Search Food</a>
