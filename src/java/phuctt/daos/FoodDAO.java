@@ -68,7 +68,7 @@ public class FoodDAO implements Serializable {
             conn = DBConnection.getConnection();
             
             if (conn != null) {
-                String sql = "SELECT FoodID, FoodName, Price, Description, Type, Status FROM tbl_Food WHERE Price >= ? AND Price <= ?";
+                String sql = "SELECT FoodID, FoodName, Price, Description, Type, Status FROM tbl_Food WHERE Price >= ? AND Price <= ? AND Status = 'Available'";
                 
                 preStm = conn.prepareStatement(sql);
                 preStm.setFloat(1, minimum);

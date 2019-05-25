@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 public class MainController extends HttpServlet {
     private final String INSERT = "InsertController";
     private final String SEARCH = "SearchController";
+    private final String SEARCH_ID = "SearchIDController";
     private final String EDIT = "EditController";
     private final String UPDATE = "UpdateController";
     private final String DELETE = "DeleteController";
@@ -37,20 +38,30 @@ public class MainController extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         String url = ERROR;
         String action = request.getParameter("action");
-        System.out.println(action);
+        
         if (action != null) {
-            if (action.equals("Insert")) {
-                url = INSERT;
-            } else if (action.equals("Search")) {
-                url = SEARCH;
-            } else if (action.equals("Edit")) {
-                url = EDIT;
-            } else if (action.equals("Delete")) {
-                url = DELETE;
-            } else if (action.equals("Update")) {
-                url = UPDATE;
-            } else {
-                request.setAttribute("ERROR", "Action is not support");
+            switch (action) {
+                case "Insert":
+                    url = INSERT;
+                    break;
+                case "Search":
+                    url = SEARCH;
+                    break;
+                case "Edit":
+                    url = EDIT;
+                    break;
+                case "Delete":
+                    url = DELETE;
+                    break;
+                case "Update":
+                    url = UPDATE;
+                    break;
+                case "Search ID":
+                    url = SEARCH_ID;
+                    break;
+                default:
+                    request.setAttribute("ERROR", "Action is not support");
+                    break;
             }
         } else {
             request.setAttribute("ERROR", "Action error!");

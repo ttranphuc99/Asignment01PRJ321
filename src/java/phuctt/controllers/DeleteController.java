@@ -17,7 +17,9 @@ import phuctt.daos.FoodDAO;
  * @author Thien Phuc
  */
 public class DeleteController extends HttpServlet {
-
+    private static final String SUCCESS = "SearchController";
+    private static final String ERROR = "error.jsp";
+    private static final String SUCCESS_ID = "index.jsp";
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -31,20 +33,27 @@ public class DeleteController extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         String foodID = request.getParameter("txtFoodID");
-        
-        request.setAttribute("txt", this);
+        String url = ERROR;
+//        request.setAttribute("txt", this);
         try {
             FoodDAO dao = new FoodDAO();
             boolean check = dao.delete(foodID);
             
             if (check) {
                 request.setAttribute("NOTI", "Delete food id: " + foodID + " successfully!");
+                String minimum = request.getParameter("txtMinimum");
+                if (minimum != null) {
+                    url = SUCCESS;
+                } else {
+                    url = SUCCESS_ID;
+                }
             }
         } catch (Exception e) {
+            request.setAttribute("ERROR", "Error while connecting with db");
             e.printStackTrace();
         }
         
-        request.getRequestDispatcher("SearchController").forward(request, response);
+        request.getRequestDispatcher(url).forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

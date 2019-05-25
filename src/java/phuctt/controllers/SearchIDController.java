@@ -6,6 +6,7 @@
 package phuctt.controllers;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -17,12 +18,7 @@ import phuctt.dtos.FoodDTO;
  *
  * @author Thien Phuc
  */
-public class UpdateController extends HttpServlet {
-
-    private static final String UPDATE = "edit.jsp";
-    private static final String SUCCESS = "SearchController";
-    private static final String SUCCESS_ID = "index.jsp";
-    private static final String ERROR = "error.jsp";
+public class SearchIDController extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -36,52 +32,19 @@ public class UpdateController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        String url = UPDATE;
-        boolean isValid = true;
-
-        String foodID = request.getParameter("txtFoodID");
-        String foodName = request.getParameter("txtFoodName");
-        float price = 0;
+        String search = request.getParameter("txtSearch");
+        String url = "error.jsp";
         try {
-            price = Float.parseFloat(request.getParameter("txtPrice"));
-        } catch (NumberFormatException e) {
-            request.setAttribute("ERROR_PRICE", "Price must be in float");
-            isValid = false;
+            FoodDAO dao = new FoodDAO();
+            FoodDTO dto = dao.findByID(search);
+            
+            request.setAttribute("DTO", dto);
+            url = "searchID.jsp";
+        } catch (Exception e) {
+            request.setAttribute("ERROR", "Error while connecting with database");
+            e.printStackTrace();
         }
-        String description = request.getParameter("txtDescription");
-        String type = request.getParameter("txtType");
-        String status = request.getParameter("txtStatus");
-        if (status == null) {
-            request.setAttribute("ERROR_STATUS", "Status cannot be empty");
-            isValid = false;
-        }
-
-        if (!isValid) {
-            url = UPDATE;
-        } else {
-            FoodDTO dto = new FoodDTO(foodID, foodName, description, type, status, price);
-            try {
-                FoodDAO dao = new FoodDAO();
-                boolean check = dao.update(dto);
-                
-                if (check) {
-                    request.setAttribute("NOTI", "Update Food ID: " + foodID + " Successfully!");
-                    
-                    String minimum = request.getParameter("txtMinimum");
-                    
-                    if (!minimum.equals("null")) {
-                        url = SUCCESS;
-                    } else {
-                        url = SUCCESS_ID;
-                    }
-                } else {
-                    url = ERROR;
-                    request.setAttribute("ERROR", "Update Food ID: " + foodID + " Failed!");
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+        
         request.getRequestDispatcher(url).forward(request, response);
     }
 

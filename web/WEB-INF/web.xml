@@ -24,6 +24,10 @@
         <servlet-name>DeleteController</servlet-name>
         <servlet-class>phuctt.controllers.DeleteController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>SearchIDController</servlet-name>
+        <servlet-class>phuctt.controllers.SearchIDController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>MainController</servlet-name>
         <url-pattern>/MainController</url-pattern>
@@ -47,6 +51,10 @@
     <servlet-mapping>
         <servlet-name>DeleteController</servlet-name>
         <url-pattern>/DeleteController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SearchIDController</servlet-name>
+        <url-pattern>/SearchIDController</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
