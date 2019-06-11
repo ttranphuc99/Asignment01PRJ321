@@ -55,11 +55,13 @@ public class UpdateController extends HttpServlet {
             request.setAttribute("ERROR_STATUS", "Status cannot be empty");
             isValid = false;
         }
+        
+        FoodDTO dto = new FoodDTO(foodID, foodName, description, type, status, price);
 
         if (!isValid) {
             url = UPDATE;
+            request.setAttribute("DTO", dto);
         } else {
-            FoodDTO dto = new FoodDTO(foodID, foodName, description, type, status, price);
             try {
                 FoodDAO dao = new FoodDAO();
                 boolean check = dao.update(dto);
