@@ -50,7 +50,7 @@ public class DeleteController extends HttpServlet {
             }
         } catch (Exception e) {
             request.setAttribute("ERROR", "Error while connecting with db");
-            e.printStackTrace();
+            log("Error at Delete Controller : " + e.getMessage());
         }
         
         request.getRequestDispatcher(url).forward(request, response);

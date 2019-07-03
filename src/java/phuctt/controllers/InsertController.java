@@ -78,6 +78,7 @@ public class InsertController extends HttpServlet {
                     request.setAttribute("ERROR", "ID is existed!");
                 } else {
                     request.setAttribute("ERROR", "Error while connect with database");
+                    log("Error at Insert Controller : " + e.getMessage());
                 }
             }
         }

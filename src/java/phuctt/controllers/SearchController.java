@@ -66,6 +66,7 @@ public class SearchController extends HttpServlet {
                 url = "search.jsp";
             } catch (SQLException | ClassNotFoundException e) {
                 request.setAttribute("ERROR", "Error while connecting with database");
+                log("Error at Search Controller : " + e.getMessage());
             }
         }
         

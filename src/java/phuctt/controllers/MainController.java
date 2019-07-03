@@ -18,7 +18,6 @@ import javax.servlet.http.HttpServletResponse;
 public class MainController extends HttpServlet {
     private final String INSERT = "InsertController";
     private final String SEARCH = "SearchController";
-    private final String SEARCH_ID = "SearchIDController";
     private final String EDIT = "EditController";
     private final String UPDATE = "UpdateController";
     private final String DELETE = "DeleteController";
@@ -54,9 +53,6 @@ public class MainController extends HttpServlet {
                     break;
                 case "Update":
                     url = UPDATE;
-                    break;
-                case "Search ID":
-                    url = SEARCH_ID;
                     break;
                 default:
                     request.setAttribute("ERROR", "Action is not support");

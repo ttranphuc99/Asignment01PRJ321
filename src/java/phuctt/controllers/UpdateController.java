@@ -81,7 +81,7 @@ public class UpdateController extends HttpServlet {
                     request.setAttribute("ERROR", "Update Food ID: " + foodID + " Failed!");
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                log("Error at Update Controller : " + e.getMessage());
             }
         }
         request.getRequestDispatcher(url).forward(request, response);

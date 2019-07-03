@@ -47,7 +47,7 @@ public class EditController extends HttpServlet {
                 request.setAttribute("ERROR", "Not found ID");
             }
         } catch (SQLException | ClassNotFoundException e) {
-            e.printStackTrace();
+            log("Error at Edit Controller : " + e.getMessage());
         }
         request.getRequestDispatcher(url).forward(request, response);
     }

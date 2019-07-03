@@ -156,10 +156,11 @@ public class FoodDAO implements Serializable {
             conn = DBConnection.getConnection();
             
             if (conn != null) {
-                String sql = "DELETE FROM tbl_Food WHERE FoodID = ?";
+                String sql = "UPDATE tbl_Food SET Status = ? WHERE FoodID = ?";
                 
                 preStm = conn.prepareStatement(sql);
-                preStm.setString(1, id);
+                preStm.setString(1, "Unavailable");
+                preStm.setString(2, id);
                 
                 check = preStm.executeUpdate() > 0;
             }

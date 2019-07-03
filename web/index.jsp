@@ -17,6 +17,5 @@
         
         <a href="insert.jsp">Insert New Food</a><br/>
         <a href="search.jsp">Search Food</a><br/>
-        <a href="searchID.jsp">Edit or Delete Food</a>
     </body>
 </html>
